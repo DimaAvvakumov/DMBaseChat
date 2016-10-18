@@ -291,9 +291,6 @@
         [self.tableView setContentOffset:CGPointMake(0.0, offset)];
         // [self.tableView setContentOffset:CGPointMake(0.0, offset) animated:animated];
     }
-    
-    CGFloat space = self.tableView.contentSize.height - self.tableView.frame.size.height - self.tableView.contentInset.bottom - self.tableView.contentOffset.y;
-    NSLog(@"Bottom relize: %f", space);
 }
 
 #pragma mark - UITableViewDelegate, UITableViewDataSource
