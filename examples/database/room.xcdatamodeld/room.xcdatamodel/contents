@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<model userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="10174" systemVersion="15G31" minimumToolsVersion="Xcode 7.0">
+    <entity name="ChatMessageEntity" representedClassName="ChatMessageEntity" syncable="YES">
+        <attribute name="date" optional="YES" attributeType="Date" syncable="YES">
+            <userInfo>
+                <entry key="dateFormat" value="yyyy-MM-dd HH:mm:ssZ"/>
+            </userInfo>
+        </attribute>
+        <attribute name="isMy" attributeType="Boolean" defaultValueString="NO" syncable="YES"/>
+        <attribute name="messageID" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="text" optional="YES" attributeType="String" syncable="YES"/>
+        <userInfo>
+            <entry key="relatedByAttribute" value="messageID"/>
+        </userInfo>
+    </entity>
+    <elements>
+        <element name="ChatMessageEntity" positionX="-63" positionY="-18" width="128" height="105"/>
+    </elements>
+</model>
