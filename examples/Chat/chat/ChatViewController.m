@@ -94,7 +94,9 @@
     cellConfigurator.item = item;
     cellConfigurator.preferredWidth = self.tableView.frame.size.width;
     
-    return [cellConfigurator calculateHeight];
+    CGFloat height = [cellConfigurator calculateHeight];
+    
+    return height;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {

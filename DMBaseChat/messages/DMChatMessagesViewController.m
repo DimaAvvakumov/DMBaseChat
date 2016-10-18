@@ -31,6 +31,10 @@
 // fetching
 @property (assign, nonatomic) NSUInteger fetchLimit;
 
+// observing
+@property (assign, nonatomic) BOOL isObservedHeight;
+@property (assign, nonatomic) CGFloat preferredWidth;
+
 @end
 
 @implementation DMChatMessagesViewController
@@ -46,6 +50,9 @@
     self.pagingEnabled = YES;
     
     self.fetchLimit = 20.0;
+    
+    self.isObservedHeight = NO;
+    self.preferredWidth = 0.0;
     
     UITapGestureRecognizer *gr = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(closeGesture:)];
     [self.tableView addGestureRecognizer:gr];
@@ -76,6 +83,10 @@
     // Dispose of any resources that can be recreated.
 }
 
+- (void)dealloc {
+    [self stopObservingHeight];
+}
+
 #pragma mark - Method to overwrite
 
 - (NSFetchRequest *)fetchRequest {
@@ -101,20 +112,26 @@
 
 - (void)startObservingHeight {
     [self.tableView addObserver:self forKeyPath:@"contentSize" options:NSKeyValueObservingOptionNew context:nil];
+    self.isObservedHeight = YES;
 }
 
 - (void)stopObservingHeight {
+    if (!self.isObservedHeight) return;
+    
     @try {
         [self.tableView removeObserver:self forKeyPath:@"contentSize"];
     } @catch (NSException *exception) {
         NSLog(@"Observation exception: %@", exception);
     }
+    
+    self.isObservedHeight = NO;
 }
 
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary<NSString *,id> *)change context:(void *)context {
     if (![keyPath isEqualToString:@"contentSize"]) {
         [super observeValueForKeyPath:keyPath ofObject:object change:change context:context];
     } else {
+        // scroll appereance
         if (self.observeDisable) return;
         
         [self updateTableScrollAppereance];
@@ -186,12 +203,6 @@
     self.bottomSpace = self.tableView.contentSize.height - self.tableView.frame.size.height - self.tableView.contentInset.bottom - self.tableView.contentOffset.y;
     
     [self.tableView reloadData];
-}
-
-#pragma mark - Data access
-
-- (NSUInteger)allItemsCount {
-    return 0;
 }
 
 #pragma mark - Signal methods
@@ -293,6 +304,36 @@
     }
 }
 
+#pragma mark - Data access
+
+- (NSUInteger)allItemsCount {
+    NSAssert(NO, @"Did you forget implement -(NSUInteger)allItemsCount in you subclass of DMChatMessagesViewController!");
+    return 0;
+}
+
+- (CGFloat)heightForRowAtIndexPath:(NSIndexPath *)indexPath {
+    NSAssert(NO, @"Did you forget implement -(CGFloat)heightForRowAtIndexPath:(NSIndexPath *)indexPath in you subclass of DMChatMessagesViewController!");
+    return 44.0;
+}
+
+#pragma mark - Access methods
+
+- (NSString *)modelKeyAtIndexPath:(NSIndexPath *)indexPath {
+    NSAssert(NO, @"Did you forget implement - (NSString *)modelKeyAtIndexPath:(NSIndexPath *)indexPath in you subclass of DMChatMessagesViewController!");
+    
+    return nil;
+}
+
+- (id)modelAtIndexPath:(NSIndexPath *)indexPath {
+    NSInteger row = indexPath.row;
+    NSInteger section = indexPath.section;
+    NSArray <id<NSFetchedResultsSectionInfo>> *secitons = [self.fetchController sections];
+    if (secitons == nil || [secitons count] == 0) return 0;
+    
+    id<NSFetchedResultsSectionInfo> sectionInfo = [secitons objectAtIndex:section];
+    return [sectionInfo.objects objectAtIndex:row];
+}
+
 #pragma mark - UITableViewDelegate, UITableViewDataSource
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
@@ -322,19 +363,27 @@
     return cell;
 }
 
-#pragma mark - Automaic height
-
-- (NSString *)modelKeyAtIndexPath:(NSIndexPath *)indexPath {
-    NSString *key = [NSString stringWithFormat:@"%ld-%ld", (long)indexPath.section, (long)indexPath.row];
-    return key;
-}
-
-- (CGFloat)heightForRowAtIndexPath:(NSIndexPath *)indexPath {
-    return 44.0;
-}
+#pragma mark - Heights
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
-    return [self heightForRowAtIndexPath:indexPath];
+    // clean cache if needed
+    CGFloat newWidth = self.tableView.frame.size.width;
+    if (self.preferredWidth != newWidth) {
+        [self clearAllCache];
+        
+        self.preferredWidth = newWidth;
+    }
+    
+    // up from cache
+    CGFloat height = [self cachedHeightAtIndexPath:indexPath];
+    if (height == 0.0) {
+        height = [self heightForRowAtIndexPath:indexPath];
+    }
+    
+    // cache it
+    [self cacheHeight:height forIndexPath:indexPath];
+    
+    return height;
 }
 
 #pragma mark - NSFetchedResultsControllerDelegate
@@ -386,6 +435,8 @@
         }
         case NSFetchedResultsChangeMove: {
             if ([indexPath isEqual:newIndexPath]) {
+                [self clearCacheAtIndexPath:indexPath];
+                
                 [self tryRefreshRowAtIndexPath:indexPath];
             } else {
                 [self.tableView moveRowAtIndexPath:indexPath toIndexPath:newIndexPath];
@@ -394,6 +445,9 @@
             break;
         }
         case NSFetchedResultsChangeUpdate: {
+            // clear cache data
+            [self clearCacheAtIndexPath:indexPath];
+            
             // do nothing
             [self tryRefreshRowAtIndexPath:indexPath];
             
@@ -419,16 +473,30 @@
     
 }
 
-#pragma mark - Access methods
+#pragma mark - Cache layer
 
-- (id)modelAtIndexPath:(NSIndexPath *)indexPath {
-    NSInteger row = indexPath.row;
-    NSInteger section = indexPath.section;
-    NSArray <id<NSFetchedResultsSectionInfo>> *secitons = [self.fetchController sections];
-    if (secitons == nil || [secitons count] == 0) return 0;
+- (void)clearAllCache {
+    [self.estimatedHeights removeAllObjects];
+}
+
+- (void)clearCacheAtIndexPath:(NSIndexPath *)indexPath {
     
-    id<NSFetchedResultsSectionInfo> sectionInfo = [secitons objectAtIndex:section];
-    return [sectionInfo.objects objectAtIndex:row];
+}
+
+- (CGFloat)cachedHeightAtIndexPath:(NSIndexPath *)indexPath {
+    NSString *key = [self modelKeyAtIndexPath:indexPath];
+    NSNumber *cachedHeight = [self.estimatedHeights objectForKey:key];
+    if (cachedHeight) {
+        return cachedHeight.doubleValue;
+    }
+    
+    return 0.0;
+}
+
+- (void)cacheHeight:(CGFloat)height forIndexPath:(NSIndexPath *)indexPath {
+    NSString *key = [self modelKeyAtIndexPath:indexPath];
+    
+    [self.estimatedHeights setObject:@(height) forKey:key];
 }
 
 #pragma mark - UITextViewDelegate
