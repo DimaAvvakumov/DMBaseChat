@@ -10,5 +10,6 @@
 #define DMBaseChat_h
 
 #import "DMChatMessagesViewController.h"
+#import "DMChatMessageCell.h"
 
 #endif /* DMBaseChat_h */
