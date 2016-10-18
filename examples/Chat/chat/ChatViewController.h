@@ -6,7 +6,7 @@
 //  Copyright © 2016 Dmitry Avvakumov. All rights reserved.
 //
 
-#import "DMChatMessagesViewController.h"
+#import "DMBaseChat.h"
 
 @interface ChatViewController : DMChatMessagesViewController
 
