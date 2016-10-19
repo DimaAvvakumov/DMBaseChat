@@ -1,7 +1,7 @@
 Pod::Spec.new do |s|
 
   s.name         = "DMBaseChat"
-  s.version      = "0.1.0"
+  s.version      = "0.1.1"
   s.summary      = "Some categories for iOS developers"
   s.homepage     = "https://github.com/DimaAvvakumov/DMBaseChat.git"
   s.license      = { :type => "MIT", :file => "LICENSE" }

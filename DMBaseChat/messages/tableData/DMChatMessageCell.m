@@ -23,16 +23,23 @@
 }
 
 - (void)configureSide:(BOOL)isLeft {
+    if (self.floatRightPinConstraint == nil) return;
+    if (self.floatLeftPinConstraint == nil) return;
+    
     if (isLeft) {
         [self.contentView removeConstraint:self.floatRightPinConstraint];
         [self.contentView addConstraint:self.floatLeftPinConstraint];
         
-        self.bubbleView.backgroundColor = [UIColor colorWithWhite:0.9 alpha:1.0];
+        if (self.bubbleView) {
+            self.bubbleView.backgroundColor = [UIColor colorWithWhite:0.9 alpha:1.0];
+        }
     } else {
         [self.contentView addConstraint:self.floatRightPinConstraint];
         [self.contentView removeConstraint:self.floatLeftPinConstraint];
         
-        self.bubbleView.backgroundColor = [UIColor whiteColor];
+        if (self.bubbleView) {
+            self.bubbleView.backgroundColor = [UIColor whiteColor];
+        }
     }
 }
 
