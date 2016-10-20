@@ -45,6 +45,8 @@
 		185A54571D76F0620037E974 /* ChatMessageEntity+CoreDataProperties.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "ChatMessageEntity+CoreDataProperties.m"; sourceTree = "<group>"; };
 		185A54581D76F0620037E974 /* ChatMessageEntity.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ChatMessageEntity.h; sourceTree = "<group>"; };
 		185A54591D76F0620037E974 /* ChatMessageEntity.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ChatMessageEntity.m; sourceTree = "<group>"; };
+		187318331DB8B5DE00E7D6AB /* DMBaseChat.podspec */ = {isa = PBXFileReference; lastKnownFileType = text; path = DMBaseChat.podspec; sourceTree = "<group>"; };
+		187318341DB8B5E700E7D6AB /* Podfile */ = {isa = PBXFileReference; lastKnownFileType = text; path = Podfile; sourceTree = "<group>"; };
 		188F96B91DB4C6450048CA37 /* NSString+Fish.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+Fish.h"; sourceTree = "<group>"; };
 		188F96BA1DB4C6450048CA37 /* NSString+Fish.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+Fish.m"; sourceTree = "<group>"; };
 		188F96CA1DB5EBCF0048CA37 /* ChatMessageConfigurator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ChatMessageConfigurator.h; sourceTree = "<group>"; };
@@ -54,11 +56,9 @@
 		188F97261DB5FD550048CA37 /* DMChatMessageCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DMChatMessageCell.h; sourceTree = "<group>"; };
 		188F97271DB5FD550048CA37 /* DMChatMessageCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DMChatMessageCell.m; sourceTree = "<group>"; };
 		188F972A1DB602010048CA37 /* DMBaseChat.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DMBaseChat.h; sourceTree = "<group>"; };
-		2FC079752571006790132F5C /* Pods-testChat.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-testChat.debug.xcconfig"; path = "Pods/Target Support Files/Pods-testChat/Pods-testChat.debug.xcconfig"; sourceTree = "<group>"; };
 		3203712239E5A4963E7A50F5 /* Pods-DMBaseChat.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-DMBaseChat.debug.xcconfig"; path = "Pods/Target Support Files/Pods-DMBaseChat/Pods-DMBaseChat.debug.xcconfig"; sourceTree = "<group>"; };
 		61947C2F720E8329838C40BC /* libPods-DMBaseChat.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-DMBaseChat.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		C06A076A7F7D7CF587CFDD96 /* libPods-testChat.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-testChat.a"; sourceTree = BUILT_PRODUCTS_DIR; };
-		D28EAAEAEBA2E9446130DBE4 /* Pods-testChat.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-testChat.release.xcconfig"; path = "Pods/Target Support Files/Pods-testChat/Pods-testChat.release.xcconfig"; sourceTree = "<group>"; };
 		E3AE3EF9E20E967A88CCB04A /* Pods-DMBaseChat.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-DMBaseChat.release.xcconfig"; path = "Pods/Target Support Files/Pods-DMBaseChat/Pods-DMBaseChat.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -81,6 +81,8 @@
 				185A541D1D76DF920037E974 /* examples */,
 				185A541C1D76DF920037E974 /* Products */,
 				3E1D89016D69BE6AC8E9465E /* Pods */,
+				187318331DB8B5DE00E7D6AB /* DMBaseChat.podspec */,
+				187318341DB8B5E700E7D6AB /* Podfile */,
 				1F23203B910FF2E3642219B3 /* Frameworks */,
 			);
 			sourceTree = "<group>";
@@ -226,8 +228,6 @@
 		3E1D89016D69BE6AC8E9465E /* Pods */ = {
 			isa = PBXGroup;
 			children = (
-				2FC079752571006790132F5C /* Pods-testChat.debug.xcconfig */,
-				D28EAAEAEBA2E9446130DBE4 /* Pods-testChat.release.xcconfig */,
 				3203712239E5A4963E7A50F5 /* Pods-DMBaseChat.debug.xcconfig */,
 				E3AE3EF9E20E967A88CCB04A /* Pods-DMBaseChat.release.xcconfig */,
 			);

@@ -587,6 +587,19 @@
     return CGSizeMake(ceilf(rect.size.width), ceilf(rect.size.height));
 }
 
+#pragma mark - TextField
+
+- (void)updateNewMessageText:(NSString *)text {
+    [self updateNewMessageText:text animated:NO];
+}
+
+- (void)updateNewMessageText:(NSString *)text animated:(BOOL)animated {
+    self.textView.text = text;
+    
+    [self updateTextViewHeightAnimated:animated];
+    [self updateTextViewPlaceholderAnimated:animated];
+}
+
 #pragma mark - Append action
 
 - (IBAction)sendMessageAction:(UIButton *)sender {

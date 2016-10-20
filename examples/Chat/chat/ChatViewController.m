@@ -32,6 +32,8 @@
     [super viewDidLoad];
     
     self.cellConfigurator = [ChatMessageConfigurator new];
+    
+    [self updateNewMessageText:@"asd asd ads" animated:NO];
 }
 
 - (void)didReceiveMemoryWarning {

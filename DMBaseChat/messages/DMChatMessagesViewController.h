@@ -30,6 +30,11 @@
 - (NSString *)modelKeyAtIndexPath:(NSIndexPath *)indexPath;
 - (id)modelAtIndexPath:(NSIndexPath *)indexPath;
 
+#pragma mark - TextField
+
+- (void)updateNewMessageText:(NSString *)text;
+- (void)updateNewMessageText:(NSString *)text animated:(BOOL)animated;
+
 #pragma mark - Actions
 
 - (IBAction)sendMessageAction:(id)sender;
