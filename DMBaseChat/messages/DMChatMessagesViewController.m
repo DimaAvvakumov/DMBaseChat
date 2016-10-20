@@ -58,7 +58,7 @@
     [self.tableView addGestureRecognizer:gr];
     
     // text view
-    self.textView.scrollEnabled = NO;
+    self.textView.delegate = self;
     
     [self initFetchController];
     [self performFetch];
@@ -112,6 +112,7 @@
 
 - (void)startObservingHeight {
     [self.tableView addObserver:self forKeyPath:@"contentSize" options:NSKeyValueObservingOptionNew context:nil];
+    [self.textView addObserver:self forKeyPath:@"contentSize" options:NSKeyValueObservingOptionNew context:nil];
     self.isObservedHeight = YES;
 }
 
@@ -120,6 +121,7 @@
     
     @try {
         [self.tableView removeObserver:self forKeyPath:@"contentSize"];
+        [self.textView removeObserver:self forKeyPath:@"contentSize"];
     } @catch (NSException *exception) {
         NSLog(@"Observation exception: %@", exception);
     }
@@ -131,10 +133,17 @@
     if (![keyPath isEqualToString:@"contentSize"]) {
         [super observeValueForKeyPath:keyPath ofObject:object change:change context:context];
     } else {
-        // scroll appereance
-        if (self.observeDisable) return;
+        if ([object isEqual:self.tableView]) {
+            // scroll appereance
+            if (self.observeDisable) return;
+            
+            [self updateTableScrollAppereance];
+        }
+        if ([object isEqual:self.textView]) {
+            [self updateTextViewPlaceholderAnimated:YES];
+            [self updateTextViewHeightAnimated:YES];
+        }
         
-        [self updateTableScrollAppereance];
     }
 }
 
@@ -503,7 +512,7 @@
 
 - (void)textViewDidChange:(UITextView *)textView {
     [self updateTextViewPlaceholderAnimated:YES];
-    [self updateTextViewHeightAnimated:YES];
+//    [self updateTextViewHeightAnimated:YES];
 }
 
 - (void)updateTextViewHeightAnimated:(BOOL)animated {
@@ -580,6 +589,8 @@
 
 #pragma mark - Append action
 
-- (IBAction)sendMessageAction:(UIButton *)sender { }
+- (IBAction)sendMessageAction:(UIButton *)sender {
+    self.textView.text = @"";
+}
 
 @end
