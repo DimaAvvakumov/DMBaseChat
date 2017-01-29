@@ -412,8 +412,8 @@
 
 - (void)controllerWillChangeContent:(NSFetchedResultsController *)controller {
     
-    self.fixBottomSpace = YES;
-    [self utilizeBottomSpace];
+    // self.fixBottomSpace = YES;
+    // [self utilizeBottomSpace];
     
     [self.tableView beginUpdates];
 }
