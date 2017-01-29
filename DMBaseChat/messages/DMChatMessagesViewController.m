@@ -28,6 +28,9 @@
 
 @property (strong, nonatomic) NSMutableDictionary *estimatedHeights;
 
+// paging
+@property (assign, nonatomic) BOOL pagingEnabled;
+
 // fetching
 @property (assign, nonatomic) NSUInteger fetchLimit;
 
@@ -47,7 +50,7 @@
     self.observeDisable = NO;
     self.fixBottomSpace = NO;
     self.bottomSpace = 0.0;
-    self.pagingEnabled = YES;
+    self.pagingEnabled = [self pagingIsEnabled];
     
     self.fetchLimit = 20.0;
     
@@ -85,6 +88,12 @@
 
 - (void)dealloc {
     [self stopObservingHeight];
+}
+
+#pragma mark - Settings
+
+- (BOOL)pagingIsEnabled {
+    return YES;
 }
 
 #pragma mark - Method to overwrite
@@ -209,9 +218,13 @@
     [self.fetchController performFetch:&error];
     
     self.fixBottomSpace = YES;
-    self.bottomSpace = self.tableView.contentSize.height - self.tableView.frame.size.height - self.tableView.contentInset.bottom - self.tableView.contentOffset.y;
+    [self utilizeBottomSpace];
     
     [self.tableView reloadData];
+}
+
+- (void)utilizeBottomSpace {
+    self.bottomSpace = self.tableView.contentSize.height - self.tableView.frame.size.height - self.tableView.contentInset.bottom - self.tableView.contentOffset.y;
 }
 
 #pragma mark - Signal methods
@@ -398,6 +411,9 @@
 #pragma mark - NSFetchedResultsControllerDelegate
 
 - (void)controllerWillChangeContent:(NSFetchedResultsController *)controller {
+    
+    self.fixBottomSpace = YES;
+    [self utilizeBottomSpace];
     
     [self.tableView beginUpdates];
 }

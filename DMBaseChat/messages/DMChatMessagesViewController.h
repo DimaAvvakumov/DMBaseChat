@@ -18,7 +18,9 @@
 
 @property (strong, nonatomic) IBOutlet NSLayoutConstraint *bottomToKeyboardConstraint;
 
-@property (assign, nonatomic) BOOL pagingEnabled;
+#pragma mark - Settings
+
+- (BOOL)pagingIsEnabled;
 
 #pragma mark - Data access
 
