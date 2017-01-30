@@ -16,17 +16,22 @@
 
 // NSString *chatBaseCacheName = @"ChatBase";
 
+#define DMChatMessagesViewController_ObjKey @"obj"
+#define DMChatMessagesViewController_OffsetKey @"offset"
+
 @interface DMChatMessagesViewController () <NSFetchedResultsControllerDelegate>
 
+/* fetch controller */
 @property (strong, nonatomic) NSFetchedResultsController *fetchController;
 
+/* indicator for follow to bottom */
 @property (assign, nonatomic) BOOL scrollToBottom;
-@property (assign, nonatomic) BOOL observeDisable;
 
-@property (assign, nonatomic) BOOL fixBottomSpace;
-@property (assign, nonatomic) CGFloat bottomSpace;
-
+/* Heights cache layer */
 @property (strong, nonatomic) NSMutableDictionary *estimatedHeights;
+@property (assign, nonatomic) CGFloat preferredWidth;
+
+@property (strong, nonatomic) NSMutableArray *cellBottomSpaces;
 
 // paging
 @property (assign, nonatomic) BOOL pagingEnabled;
@@ -36,7 +41,6 @@
 
 // observing
 @property (assign, nonatomic) BOOL isObservedHeight;
-@property (assign, nonatomic) CGFloat preferredWidth;
 
 @end
 
@@ -46,16 +50,16 @@
     [super viewDidLoad];
     
     self.estimatedHeights = [NSMutableDictionary dictionaryWithCapacity:10];
-    self.scrollToBottom = YES;
-    self.observeDisable = NO;
-    self.fixBottomSpace = NO;
-    self.bottomSpace = 0.0;
-    self.pagingEnabled = [self pagingIsEnabled];
+    self.preferredWidth = 0.0;
     
-    self.fetchLimit = 20.0;
+    
+    self.pagingEnabled = [self pagingIsEnabled];
+    self.fetchLimit = [self pagingPerpage];
+    
+    /* bottom */
+    self.cellBottomSpaces = [NSMutableArray arrayWithCapacity:10];
     
     self.isObservedHeight = NO;
-    self.preferredWidth = 0.0;
     
     UITapGestureRecognizer *gr = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(closeGesture:)];
     [self.tableView addGestureRecognizer:gr];
@@ -65,6 +69,9 @@
     
     [self initFetchController];
     [self performFetch];
+    
+    /* Scroll to bottom initially */
+    self.scrollToBottom = YES;
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -73,6 +80,7 @@
     [self startObservingHeight];
     [self updateTextViewPlaceholderAnimated:NO];
     [self updateTextViewHeightAnimated:NO];
+    
 }
 
 - (void)viewDidDisappear:(BOOL)animated {
@@ -94,6 +102,10 @@
 
 - (BOOL)pagingIsEnabled {
     return YES;
+}
+
+- (NSUInteger)pagingPerpage {
+    return 20.0;
 }
 
 #pragma mark - Method to overwrite
@@ -143,26 +155,20 @@
         [super observeValueForKeyPath:keyPath ofObject:object change:change context:context];
     } else {
         if ([object isEqual:self.tableView]) {
-            // scroll appereance
-            if (self.observeDisable) return;
             
-            [self updateTableScrollAppereance];
+            /* restore content offset */
+            if (self.scrollToBottom == YES) {
+                [self scrollToBottomAnimated:YES];
+            } else {
+                [self scrollToBottomSpace];
+            }
+            
         }
         if ([object isEqual:self.textView]) {
             [self updateTextViewPlaceholderAnimated:YES];
             [self updateTextViewHeightAnimated:YES];
         }
         
-    }
-}
-
-- (void)updateTableScrollAppereance {
-    if (self.scrollToBottom == YES) {
-        [self scrollToBottomAnimated:YES];
-    }
-    if (self.fixBottomSpace == YES) {
-        self.fixBottomSpace = NO;
-        [self scrollToBottomSpace];
     }
 }
 
@@ -205,6 +211,8 @@
     NSArray *fetchedObjects = [self.fetchController fetchedObjects];
     if (fetchedObjects == nil) return;
     
+    [self utilizeBottomSpaces];
+    
     NSInteger fetchedCount = [fetchedObjects count];
     
     NSInteger count = [self allItemsCount];
@@ -217,14 +225,28 @@
     NSError *error = nil;
     [self.fetchController performFetch:&error];
     
-    self.fixBottomSpace = YES;
-    [self utilizeBottomSpace];
-    
     [self.tableView reloadData];
+    [self scrollToBottomSpace];
+    
 }
 
-- (void)utilizeBottomSpace {
-    self.bottomSpace = self.tableView.contentSize.height - self.tableView.frame.size.height - self.tableView.contentInset.bottom - self.tableView.contentOffset.y;
+- (void)utilizeBottomSpaces {
+    [self.cellBottomSpaces removeAllObjects];
+    
+    NSArray *visibleIndexPaths = [self.tableView indexPathsForVisibleRows];
+    if (visibleIndexPaths && [visibleIndexPaths count] > 0) {
+        for (NSIndexPath *indexPath in visibleIndexPaths) {
+            NSManagedObject *obj = [self modelAtIndexPath:indexPath];
+            CGRect rect = [self.tableView rectForRowAtIndexPath:indexPath];
+            CGFloat offset = rect.origin.y - self.tableView.contentOffset.y;
+            
+            NSDictionary *info = @{
+                                   DMChatMessagesViewController_ObjKey:obj,
+                                   DMChatMessagesViewController_OffsetKey:@(offset)
+                                   };
+            [self.cellBottomSpaces addObject:info];
+        }
+    }
 }
 
 #pragma mark - Signal methods
@@ -241,24 +263,14 @@
 }
 
 - (void)kb_keyboardShowOrHideAnimationWithHeight:(CGFloat)height animationDuration:(NSTimeInterval)animationDuration animationCurve:(UIViewAnimationCurve)animationCurve {
-//    UIEdgeInsets insets = self.tableView.contentInset;
-//    insets.bottom = height;
-//    [self.tableView setContentInset:insets];
-    
     [self tableViewInset];
     
     self.bottomToKeyboardConstraint.constant = height;
     if (height > 0 && self.scrollToBottom) {
         [self scrollToBottomAnimated:NO];
-        
-        self.observeDisable = YES;
     }
     
     [self.view layoutIfNeeded];
-}
-
-- (void)kb_keyboardShowOrHideAnimationDidFinishedWithHeight:(CGFloat)height {
-    self.observeDisable = NO;
 }
 
 #pragma mark - Close keyboard
@@ -316,13 +328,21 @@
 }
 
 - (void)scrollToBottomSpace {
-    CGFloat tableH = self.tableView.frame.size.height;
-    CGFloat h = self.tableView.contentSize.height;
+    if (self.cellBottomSpaces == nil) return;
+    if ([self.cellBottomSpaces count] == 0) return;
     
-    CGFloat offset = h - tableH - self.tableView.contentInset.bottom - self.bottomSpace;
-    if (offset > 0.0) {
-        [self.tableView setContentOffset:CGPointMake(0.0, offset)];
-        // [self.tableView setContentOffset:CGPointMake(0.0, offset) animated:animated];
+    for (NSDictionary *info in self.cellBottomSpaces) {
+        NSManagedObject *obj = [info objectForKey:DMChatMessagesViewController_ObjKey];
+        NSNumber *offset = [info objectForKey:DMChatMessagesViewController_OffsetKey];
+        
+        NSIndexPath *indexPath = [self.fetchController indexPathForObject:obj];
+        if (indexPath == nil) continue;
+        
+        CGRect rect = [self.tableView rectForRowAtIndexPath:indexPath];
+        CGFloat contentOffset = rect.origin.y - offset.doubleValue;
+        
+        [self.tableView setContentOffset:CGPointMake(0.0, contentOffset)];
+        return;
     }
 }
 
@@ -412,81 +432,21 @@
 
 - (void)controllerWillChangeContent:(NSFetchedResultsController *)controller {
     
-    // self.fixBottomSpace = YES;
-    // [self utilizeBottomSpace];
-    
-    [self.tableView beginUpdates];
-}
-
-- (void)controller:(NSFetchedResultsController *)controller didChangeSection:(id<NSFetchedResultsSectionInfo>)sectionInfo atIndex:(NSUInteger)sectionIndex forChangeType:(NSFetchedResultsChangeType)type {
-    
-    switch (type) {
-        case NSFetchedResultsChangeInsert: {
-            NSIndexSet *indexSet = [NSIndexSet indexSetWithIndex:sectionIndex];
-            [self.tableView insertSections:indexSet withRowAnimation:UITableViewRowAnimationAutomatic];
-            break;
-        }
-        case NSFetchedResultsChangeDelete: {
-            NSIndexSet *indexSet = [NSIndexSet indexSetWithIndex:sectionIndex];
-            [self.tableView deleteSections:indexSet withRowAnimation:UITableViewRowAnimationAutomatic];
-            break;
-        }
-        case NSFetchedResultsChangeMove: {
-            
-            break;
-        }
-        case NSFetchedResultsChangeUpdate: {
-            
-            break;
-        }
-        default:
-            break;
-    }
-    
-}
-
-- (void)controller:(NSFetchedResultsController *)controller didChangeObject:(id)anObject atIndexPath:(NSIndexPath *)indexPath forChangeType:(NSFetchedResultsChangeType)type newIndexPath:(NSIndexPath *)newIndexPath {
-    
-    switch (type) {
-        case NSFetchedResultsChangeInsert: {
-            [self.tableView insertRowsAtIndexPaths:@[newIndexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
-            
-            break;
-        }
-        case NSFetchedResultsChangeDelete: {
-            [self.tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
-            
-            break;
-        }
-        case NSFetchedResultsChangeMove: {
-            if ([indexPath isEqual:newIndexPath]) {
-                [self clearCacheAtIndexPath:indexPath];
-                
-                [self tryRefreshRowAtIndexPath:indexPath];
-            } else {
-                [self.tableView moveRowAtIndexPath:indexPath toIndexPath:newIndexPath];
-            }
-            
-            break;
-        }
-        case NSFetchedResultsChangeUpdate: {
-            // clear cache data
-            [self clearCacheAtIndexPath:indexPath];
-            
-            // do nothing
-            [self tryRefreshRowAtIndexPath:indexPath];
-            
-            break;
-        }
-        default:
-            break;
-    }
-    
+    /* prepare for data changes */
+    [self utilizeBottomSpaces];
 }
 
 - (void)controllerDidChangeContent:(NSFetchedResultsController *)controller {
     
-    [self.tableView endUpdates];
+    /* reload data */
+    [self.tableView reloadData];
+    
+    /* restore content offset */
+//    if (self.scrollToBottom == YES) {
+//        [self scrollToBottomAnimated:YES];
+//    } else {
+//        [self scrollToBottomSpace];
+//    }
 }
 
 - (void)tryRefreshRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -528,7 +488,6 @@
 
 - (void)textViewDidChange:(UITextView *)textView {
     [self updateTextViewPlaceholderAnimated:YES];
-//    [self updateTextViewHeightAnimated:YES];
 }
 
 - (void)updateTextViewHeightAnimated:(BOOL)animated {

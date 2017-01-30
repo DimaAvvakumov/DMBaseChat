@@ -11,6 +11,8 @@
 // frameworks
 #import <MagicalRecord/MagicalRecord.h>
 
+#import "NSString+Fish.h"
+
 // core data
 #import "ChatMessageEntity.h"
 
@@ -143,5 +145,35 @@
     
     return formatter;
 }
+
+#pragma mark - Append data
+
+- (IBAction)appendSelector:(id)sender {
+    
+    [self appendData];
+}
+
+- (void)appendData {
+    
+    [MagicalRecord saveWithBlock:^(NSManagedObjectContext * _Nonnull localContext) {
+        for (int i = 1; i < 20; i++) {
+            NSTimeInterval offset = i * 60.0 * 3.0 * 24.0;
+            NSDate *date = [NSDate dateWithTimeIntervalSinceNow: - offset];
+            NSString *dateStr = [[self dateFormatter] stringFromDate:date];
+            int r = arc4random_uniform(100);
+            BOOL isMy = (r > 50) ? YES : NO;
+            
+            
+            NSMutableDictionary *info = [NSMutableDictionary dictionaryWithCapacity:10];
+            [info setObject:[[NSProcessInfo processInfo] globallyUniqueString] forKey:@"messageID"];
+            [info setObject:dateStr forKey:@"date"];
+            [info setObject:@(isMy) forKey:@"isMy"];
+            [info setObject:[NSString generateRandomFishWithLength:128] forKey:@"text"];
+            
+            [ChatMessageEntity MR_importFromObject:info inContext:localContext];
+        }
+    }];
+}
+
 
 @end

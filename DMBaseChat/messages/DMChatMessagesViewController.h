@@ -21,6 +21,7 @@
 #pragma mark - Settings
 
 - (BOOL)pagingIsEnabled;
+- (NSUInteger)pagingPerpage;
 
 #pragma mark - Data access
 

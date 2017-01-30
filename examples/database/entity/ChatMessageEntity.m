@@ -10,6 +10,15 @@
 
 @implementation ChatMessageEntity
 
-// Insert code here to add functionality to your managed object subclass
+- (NSString *)description {
+    NSString *desc = [super description];
+    
+    NSMutableArray *pices = [NSMutableArray arrayWithCapacity:10];
+    
+    [pices addObject:[NSString stringWithFormat:@"%@", desc]];
+    [pices addObject:[NSString stringWithFormat:@"\ttext: %@", self.text]];
+    
+    return [pices componentsJoinedByString:@"\n"];
+}
 
 @end
