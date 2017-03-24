@@ -375,7 +375,7 @@
     if (secitons == nil || [secitons count] == 0) return nil;
     
     id<NSFetchedResultsSectionInfo> sectionInfo = [secitons objectAtIndex:section];
-    if ([sectionInfo numberOfObjects] >= row) return nil;
+    if ([sectionInfo numberOfObjects] <= row) return nil;
     
     return [sectionInfo.objects objectAtIndex:row];
 }
