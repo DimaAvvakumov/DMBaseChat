@@ -237,6 +237,8 @@
     if (visibleIndexPaths && [visibleIndexPaths count] > 0) {
         for (NSIndexPath *indexPath in visibleIndexPaths) {
             NSManagedObject *obj = [self modelAtIndexPath:indexPath];
+            if (obj == nil) continue;
+            
             CGRect rect = [self.tableView rectForRowAtIndexPath:indexPath];
             CGFloat offset = rect.origin.y - self.tableView.contentOffset.y;
             
@@ -370,9 +372,11 @@
     NSInteger row = indexPath.row;
     NSInteger section = indexPath.section;
     NSArray <id<NSFetchedResultsSectionInfo>> *secitons = [self.fetchController sections];
-    if (secitons == nil || [secitons count] == 0) return 0;
+    if (secitons == nil || [secitons count] == 0) return nil;
     
     id<NSFetchedResultsSectionInfo> sectionInfo = [secitons objectAtIndex:section];
+    if ([sectionInfo numberOfObjects] >= row) return nil;
+    
     return [sectionInfo.objects objectAtIndex:row];
 }
 
