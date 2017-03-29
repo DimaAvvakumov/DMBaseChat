@@ -494,6 +494,10 @@
     [self updateTextViewPlaceholderAnimated:YES];
 }
 
+- (void)textViewDidEndEditing:(UITextView *)textView {
+    [self updateTextViewPlaceholderAnimated:YES];
+}
+
 - (void)updateTextViewHeightAnimated:(BOOL)animated {
     UIEdgeInsets insets = self.textView.textContainerInset;
     CGFloat insetAppend = insets.top + insets.bottom;
