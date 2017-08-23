@@ -22,6 +22,7 @@
 		188F96CC1DB5EBCF0048CA37 /* ChatMessageConfigurator.m in Sources */ = {isa = PBXBuildFile; fileRef = 188F96CB1DB5EBCF0048CA37 /* ChatMessageConfigurator.m */; };
 		188F97281DB5FD550048CA37 /* DMChatMessagesViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 188F97241DB5FD550048CA37 /* DMChatMessagesViewController.m */; };
 		188F97291DB5FD550048CA37 /* DMChatMessageCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 188F97271DB5FD550048CA37 /* DMChatMessageCell.m */; };
+		18C581481F4D462D0069AD01 /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 18C581471F4D462D0069AD01 /* CoreData.framework */; };
 		9B73ABE4FB1C0263F487098B /* libPods-DMBaseChat.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 61947C2F720E8329838C40BC /* libPods-DMBaseChat.a */; };
 /* End PBXBuildFile section */
 
@@ -56,6 +57,7 @@
 		188F97261DB5FD550048CA37 /* DMChatMessageCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DMChatMessageCell.h; sourceTree = "<group>"; };
 		188F97271DB5FD550048CA37 /* DMChatMessageCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DMChatMessageCell.m; sourceTree = "<group>"; };
 		188F972A1DB602010048CA37 /* DMBaseChat.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DMBaseChat.h; sourceTree = "<group>"; };
+		18C581471F4D462D0069AD01 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
 		3203712239E5A4963E7A50F5 /* Pods-DMBaseChat.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-DMBaseChat.debug.xcconfig"; path = "Pods/Target Support Files/Pods-DMBaseChat/Pods-DMBaseChat.debug.xcconfig"; sourceTree = "<group>"; };
 		61947C2F720E8329838C40BC /* libPods-DMBaseChat.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-DMBaseChat.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		C06A076A7F7D7CF587CFDD96 /* libPods-testChat.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-testChat.a"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -67,6 +69,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				18C581481F4D462D0069AD01 /* CoreData.framework in Frameworks */,
 				9B73ABE4FB1C0263F487098B /* libPods-DMBaseChat.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -219,6 +222,7 @@
 		1F23203B910FF2E3642219B3 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				18C581471F4D462D0069AD01 /* CoreData.framework */,
 				C06A076A7F7D7CF587CFDD96 /* libPods-testChat.a */,
 				61947C2F720E8329838C40BC /* libPods-DMBaseChat.a */,
 			);

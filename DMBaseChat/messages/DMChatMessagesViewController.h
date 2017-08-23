@@ -8,6 +8,8 @@
 
 #import <UIKit/UIKit.h>
 
+@class NSFetchRequest, NSManagedObjectContext;
+
 @interface DMChatMessagesViewController : UIViewController <UITableViewDelegate, UITableViewDataSource, UITextViewDelegate>
 
 @property (strong, nonatomic) IBOutlet UITableView *tableView;
@@ -22,6 +24,12 @@
 
 - (BOOL)pagingIsEnabled;
 - (NSUInteger)pagingPerpage;
+
+#pragma mark - Overwrite
+- (NSFetchRequest *)fetchRequest;
+- (NSManagedObjectContext *)fetchManagedObjectContext;
+- (NSString *)sectionKeyPath;
+- (void)refreshRowAtIndexPath:(NSIndexPath *)indexPath;
 
 #pragma mark - Data access
 

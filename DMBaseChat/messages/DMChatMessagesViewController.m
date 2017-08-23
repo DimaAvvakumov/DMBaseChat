@@ -8,6 +8,9 @@
 
 #import "DMChatMessagesViewController.h"
 
+// frameworks
+#import <CoreData/CoreData.h>
+
 // categories
 #import <DMCategories/DMCategories.h>
 
@@ -118,6 +121,10 @@
     return fetchRequest;
 }
 
+- (NSManagedObjectContext *)fetchManagedObjectContext {
+    return nil;
+}
+
 - (NSString *)sectionKeyPath {
     return nil;
 }
@@ -172,10 +179,12 @@
 #pragma mark - Fetch controller initialization
 
 - (void)initFetchController {
+    /* fetch parameters */
     NSFetchRequest *fetchRequest = [self fetchRequest];
     NSString *sectionKeyPath = [self sectionKeyPath];
+    NSManagedObjectContext *context = [self fetchManagedObjectContext];
     
-    NSFetchedResultsController *fetchController = [[NSFetchedResultsController alloc] initWithFetchRequest:fetchRequest managedObjectContext:[NSManagedObjectContext MR_defaultContext] sectionNameKeyPath:sectionKeyPath cacheName:nil];
+    NSFetchedResultsController *fetchController = [[NSFetchedResultsController alloc] initWithFetchRequest:fetchRequest managedObjectContext:context sectionNameKeyPath:sectionKeyPath cacheName:nil];
     fetchController.delegate = self;
     
     self.fetchController = fetchController;

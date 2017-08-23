@@ -67,6 +67,10 @@
     return fetchRequest;
 }
 
+- (NSManagedObjectContext *)fetchManagedObjectContext {
+    return [NSManagedObjectContext MR_defaultContext];
+}
+
 - (NSString *)sectionKeyPath {
     return nil;
 }
