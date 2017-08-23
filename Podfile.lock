@@ -1,13 +1,11 @@
 PODS:
-  - CWStatusBarNotification (2.3.5)
-  - DMCategories (1.0.0)
+  - DMCategories (2.6.1)
   - MagicalRecord (2.3.2):
     - MagicalRecord/Core (= 2.3.2)
   - MagicalRecord/Core (2.3.2)
   - StandardPaths (1.6.4)
 
 DEPENDENCIES:
-  - CWStatusBarNotification
   - DMCategories (from `https://github.com/DimaAvvakumov/DMCategories.git`)
   - MagicalRecord
   - StandardPaths
@@ -18,15 +16,14 @@ EXTERNAL SOURCES:
 
 CHECKOUT OPTIONS:
   DMCategories:
-    :commit: b18e0991cf7139980118d85ca6df7744f6313dce
+    :commit: 9c3aba6030c6242ee4272cae19f43e5b679053b4
     :git: https://github.com/DimaAvvakumov/DMCategories.git
 
 SPEC CHECKSUMS:
-  CWStatusBarNotification: 3d2738b25c3207f60cc50201388d3c96182545ff
-  DMCategories: 0bb5b5c82d40bed36d26c53033c460bd2d958506
+  DMCategories: 308f68b0293e4e3b49da83f800b71ff34a5b6d1f
   MagicalRecord: 53bed74b4323b930992a725be713e53b37d19755
   StandardPaths: d5c7fadc9ea4327e460a19052d5a18cfbffa689d
 
-PODFILE CHECKSUM: 25171bc3adbe2f7a87daec4b6e274737cc70ea3a
+PODFILE CHECKSUM: 236043a9a03225b2c4f8f3e6c8692e1e0241d925
 
-COCOAPODS: 1.0.1
+COCOAPODS: 1.3.1

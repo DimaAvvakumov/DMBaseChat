@@ -7,8 +7,6 @@ def allPods
     pod 'StandardPaths'
     pod 'MagicalRecord'
 
-    pod 'CWStatusBarNotification'
-
     pod 'DMCategories', :git => 'https://github.com/DimaAvvakumov/DMCategories.git'
 end
 

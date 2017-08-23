@@ -8,6 +8,8 @@
 
 #import <UIKit/UIKit.h>
 
+#import "DMKeyboardManager.h"
+
 @interface UIViewController (KeyboardBehavior)
 
 @property (nonatomic, readonly) BOOL kb_isKeyboardPresented;
@@ -24,5 +26,11 @@
                                   animationCurve:(UIViewAnimationCurve)animationCurve;
 
 - (void)kb_keyboardShowOrHideAnimationDidFinishedWithHeight:(CGFloat)height;
+
+- (DMKeyboardManager *)kb_keyboardManager;
+- (BOOL)kb_shouldPresentHideButton;
+- (CGFloat)kb_hideButtonOffset;
+
+- (void)kb_hideKeyboard;
 
 @end

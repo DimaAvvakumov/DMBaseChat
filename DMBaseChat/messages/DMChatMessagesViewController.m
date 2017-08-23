@@ -8,9 +8,6 @@
 
 #import "DMChatMessagesViewController.h"
 
-// frameworks
-#import <MagicalRecord/MagicalRecord.h>
-
 // categories
 #import <DMCategories/DMCategories.h>
 
