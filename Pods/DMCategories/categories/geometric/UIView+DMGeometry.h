@@ -29,5 +29,7 @@
 - (void)setCenterX:(CGFloat)value;
 - (void)setCenterY:(CGFloat)value;
 
+#pragma mark - Frame
+- (CGRect)zeroOriginFrame;
 
 @end

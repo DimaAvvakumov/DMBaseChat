@@ -116,7 +116,7 @@
     CGRect keyboardFrame = [userInfo[UIKeyboardFrameEndUserInfoKey] CGRectValue];
     BOOL isShowNotification = [notification.name isEqualToString:UIKeyboardWillShowNotification];
     CGFloat keyboardHeight = isShowNotification ? CGRectGetHeight(keyboardFrame) : 0.0;
-
+    
     self.keyboardHeight = keyboardHeight;
     
     UIResponder *responder = self.firstResponder;

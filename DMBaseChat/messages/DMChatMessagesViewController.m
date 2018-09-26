@@ -42,6 +42,8 @@
 // observing
 @property (assign, nonatomic) BOOL isObservedHeight;
 
+@property (strong, nonatomic) NSString *scrollToken;
+
 @end
 
 @implementation DMChatMessagesViewController
@@ -162,10 +164,11 @@
             
             /* restore content offset */
             if (self.scrollToBottom == YES) {
-                [self scrollToBottomAnimated:YES];
-            } else {
-                [self scrollToBottomSpace];
+                [self scrollToBottomAfterDelayAnimated:YES];
             }
+//            else {
+//                [self scrollToBottomSpace];
+//            }
             
         }
         if ([object isEqual:self.textView]) {
@@ -325,6 +328,25 @@
     }
 }
 
+- (void)scrollToBottomAfterDelayAnimated:(BOOL)animated {
+    NSString *token = [NSProcessInfo processInfo].globallyUniqueString;
+    self.scrollToken = token;
+    
+    // weak self
+    __weak typeof (self) weakSelf = self;
+    
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(300 * NSEC_PER_MSEC)), dispatch_get_main_queue(), ^{
+        typeof (weakSelf) strongSelf = weakSelf;
+        if (strongSelf == nil) return ;
+        
+        if (token == strongSelf.scrollToken) {
+            [strongSelf scrollToBottomAnimated:animated];
+        }
+    });
+    
+    
+}
+
 - (void)scrollToBottomAnimated:(BOOL)animated {
     CGFloat tableH = self.tableView.frame.size.height;
     CGFloat h = self.tableView.contentSize.height;
@@ -450,13 +472,7 @@
     
     /* reload data */
     [self.tableView reloadData];
-    
-    /* restore content offset */
-//    if (self.scrollToBottom == YES) {
-//        [self scrollToBottomAnimated:YES];
-//    } else {
-//        [self scrollToBottomSpace];
-//    }
+    [self scrollToBottomSpace];
 }
 
 - (void)tryRefreshRowAtIndexPath:(NSIndexPath *)indexPath {

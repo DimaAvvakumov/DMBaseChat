@@ -82,4 +82,12 @@
     [self setCenter:center];
 }
 
+#pragma mark - Frame
+
+- (CGRect)zeroOriginFrame {
+    CGRect frame = CGRectZero;
+    frame.size = self.frame.size;
+    return frame;
+}
+
 @end

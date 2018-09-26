@@ -60,8 +60,6 @@ SOFTWARE.
 
 StandardPaths
 
-Version 1.6.4, April 10th 2015
-
 Copyright (C) 2011 Charcoal Design
 
 This software is provided 'as-is', without any express or implied

@@ -1,14 +1,19 @@
 PODS:
-  - DMCategories (2.6.1)
+  - DMCategories (3.2.1)
   - MagicalRecord (2.3.2):
     - MagicalRecord/Core (= 2.3.2)
   - MagicalRecord/Core (2.3.2)
-  - StandardPaths (1.6.4)
+  - StandardPaths (1.6.6)
 
 DEPENDENCIES:
   - DMCategories (from `https://github.com/DimaAvvakumov/DMCategories.git`)
   - MagicalRecord
   - StandardPaths
+
+SPEC REPOS:
+  https://github.com/cocoapods/specs.git:
+    - MagicalRecord
+    - StandardPaths
 
 EXTERNAL SOURCES:
   DMCategories:
@@ -16,14 +21,14 @@ EXTERNAL SOURCES:
 
 CHECKOUT OPTIONS:
   DMCategories:
-    :commit: 9c3aba6030c6242ee4272cae19f43e5b679053b4
+    :commit: e31f4cf3cf56d833bf49f7e9f00a212620eea563
     :git: https://github.com/DimaAvvakumov/DMCategories.git
 
 SPEC CHECKSUMS:
-  DMCategories: 308f68b0293e4e3b49da83f800b71ff34a5b6d1f
+  DMCategories: 2d26848ee952add5ef27baba6d798ccbb4810d96
   MagicalRecord: 53bed74b4323b930992a725be713e53b37d19755
-  StandardPaths: d5c7fadc9ea4327e460a19052d5a18cfbffa689d
+  StandardPaths: fb0dfc241d3e99ecabd7d1adec965b20d1b9bd1a
 
 PODFILE CHECKSUM: 236043a9a03225b2c4f8f3e6c8692e1e0241d925
 
-COCOAPODS: 1.3.1
+COCOAPODS: 1.5.3

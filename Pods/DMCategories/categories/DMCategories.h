@@ -9,6 +9,12 @@
 #ifndef DMCategories_h
 #define DMCategories_h
 
+#define DM_SYSTEM_VERSIONEQUAL_TO(v)                  ([[[UIDevice currentDevice] systemVersion] compare:v options:NSNumericSearch] == NSOrderedSame)
+#define DM_SYSTEM_VERSIONGREATER_THAN(v)              ([[[UIDevice currentDevice] systemVersion] compare:v options:NSNumericSearch] == NSOrderedDescending)
+#define DM_SYSTEM_VERSIONGREATER_THAN_OR_EQUAL_TO(v)  ([[[UIDevice currentDevice] systemVersion] compare:v options:NSNumericSearch] != NSOrderedAscending)
+#define DM_SYSTEM_VERSIONLESS_THAN(v)                 ([[[UIDevice currentDevice] systemVersion] compare:v options:NSNumericSearch] == NSOrderedAscending)
+#define DM_SYSTEM_VERSIONLESS_THAN_OR_EQUAL_TO(v)     ([[[UIDevice currentDevice] systemVersion] compare:v options:NSNumericSearch] != NSOrderedDescending)
+
 #import "UIView+DMAnimation.h"
 #import "UIButton+BackgroundColor.h"
 #import "UIButton+NoAnimation.h"

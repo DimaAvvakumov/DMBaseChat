@@ -37,7 +37,17 @@
 }
 
 - (CGFloat)kb_keyboardHeight {
-    return [self.kb_keyboardManager keyboardHeight];
+    CGFloat keyboardHeight = [self.kb_keyboardManager keyboardHeight];
+    
+    // Safe Guade
+    if (@available(iOS 11.0, *)) {
+        if (keyboardHeight > 0) {
+            CGFloat guideHeight = self.view.safeAreaInsets.bottom;
+            keyboardHeight = keyboardHeight - guideHeight;
+        }
+    }
+    
+    return keyboardHeight;
 }
 
 #pragma mark - Properties isKeyboardPresented
@@ -244,6 +254,14 @@ static void keyboardBehavior_swizzleInstanceMethod(Class c, SEL original, SEL re
     BOOL isShowNotification = [notification.name isEqualToString:UIKeyboardWillShowNotification];
     CGFloat keyboardHeight = isShowNotification ? CGRectGetHeight(convertedRect) : 0.0;
     
+    // Safe Guade
+    if (@available(iOS 11.0, *)) {
+        if (keyboardHeight > 0) {
+            CGFloat guideHeight = self.view.safeAreaInsets.bottom;
+            keyboardHeight = keyboardHeight - guideHeight;
+        }
+    }
+
     // application state
     UIApplicationState state =  [[UIApplication sharedApplication] applicationState];
     if (state != UIApplicationStateActive && keyboardHeight != 0.0) return;
